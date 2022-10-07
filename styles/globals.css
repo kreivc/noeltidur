@@ -1,26 +1,62 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@700&display=swap");
 
 * {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
+*::-webkit-scrollbar {
+	display: none;
+}
+
+/* --- animate.css --- */
+
+.fadeinUp {
+	animation: fadeInUp;
+	animation-duration: 0.5s;
+}
+
+.fadeinDown {
+	animation: fadeInDown;
+	animation-duration: 0.5s;
+}
+
+.fadeinDownInfinite {
+	animation: fadeInDown infinite;
+	animation-duration: 2s;
+}
+
+.fadeIn1 {
+	animation: fadeIn;
+	animation-duration: 0.5s;
+}
+.fadeIn2 {
+	animation: fadeIn;
+	animation-duration: 0.75s;
+}
+.fadeIn3 {
+	animation: fadeIn;
+	animation-duration: 1s;
+}
+.fadeIn4 {
+	animation: fadeIn;
+	animation-duration: 1.25s;
+}
+.fadeIn5 {
+	animation: fadeIn;
+	animation-duration: 1.5s;
+}
+.fadeIn6 {
+	animation: fadeIn;
+	animation-duration: 1.75s;
+}
+.fadeIn7 {
+	animation: fadeIn;
+	animation-duration: 2s;
+}
+.fadeIn8 {
+	animation: fadeIn;
+	animation-duration: 2.5s;
 }
