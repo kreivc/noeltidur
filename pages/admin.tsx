@@ -10,7 +10,6 @@ import {
 	Heading,
 	Image,
 	Input,
-	Tooltip,
 	SimpleGrid,
 	Textarea,
 	useToast,
@@ -21,12 +20,14 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { useState } from "react";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import axios from "axios";
+import { useMemo } from "react";
 
 const Admin: NextPage = () => {
 	const [title, setTitle] = useState("");
 	const [date, setDate] = useState(new Date());
 	const [image, setImage] = useState<FileList | null>(null);
 	const [description, setDescription] = useState("");
+	const [password, setPassword] = useState("");
 	const [state, setState] = useState<"initial" | "submitting" | "success">(
 		"initial"
 	);
@@ -45,18 +46,27 @@ const Admin: NextPage = () => {
 				alt="img preview"
 				border="1px solid gray"
 				rounded="lg"
-				objectFit="fill"
+				objectFit="cover"
 				maxH="300px"
 				mb="3"
 			/>
 		);
 	};
 
+	const CachedImage = useMemo(
+		() => (
+			<Box maxH="500px" pos="relative">
+				<ShowImage />
+			</Box>
+		),
+		[image]
+	);
+
 	const postNow = async (e: React.FormEvent<EventTarget>) => {
 		e.preventDefault();
 		setState("submitting");
 
-		if (!title || !date || !image) {
+		if (!title || !date || !image || !password) {
 			setState("initial");
 			return toast({
 				title: "😴😪💤",
@@ -72,6 +82,7 @@ const Admin: NextPage = () => {
 		formData.append("title", title);
 		formData.append("date", date.toString());
 		formData.append("description", description);
+		formData.append("password", password);
 		formData.append("image", image[0]);
 
 		try {
@@ -128,6 +139,7 @@ const Admin: NextPage = () => {
 								<FormControl>
 									<FormLabel>Title</FormLabel>
 									<Input
+										name="title"
 										placeholder="Title"
 										type="text"
 										onChange={(e) => setTitle(e.target.value)}
@@ -140,7 +152,7 @@ const Admin: NextPage = () => {
 								<FormControl>
 									<FormLabel>Date</FormLabel>
 									<SingleDatepicker
-										name="date-input"
+										name="date"
 										date={date}
 										onDateChange={setDate}
 									/>
@@ -149,21 +161,21 @@ const Admin: NextPage = () => {
 							<GridItem colSpan={2}>
 								<FormControl>
 									<FormLabel>Image</FormLabel>
-									<Box maxH="500px">
-										<ShowImage />
+									<Box maxH="500px" pos="relative">
+										{CachedImage}
 									</Box>
-									<Tooltip label="Add Thumbnail" placement="top" fontSize="lg">
-										<FormLabel
-											justifyContent="center"
-											htmlFor="image"
-											border="1px solid gray"
-											p="2"
-											cursor="pointer"
-										>
-											<AiOutlinePlus />
-										</FormLabel>
-									</Tooltip>
+									<FormLabel
+										m="0"
+										htmlFor="image"
+										border="1px solid slategray"
+										borderRadius="lg"
+										p="3"
+										cursor="pointer"
+									>
+										<AiOutlinePlus className="mx-auto" />
+									</FormLabel>
 									<Input
+										name="image"
 										id="image"
 										type="file"
 										accept="image/*"
@@ -179,9 +191,23 @@ const Admin: NextPage = () => {
 								<FormControl>
 									<FormLabel>Description</FormLabel>
 									<Textarea
-										placeholder="Message"
+										name="description"
+										placeholder="Description"
 										onChange={(e) => setDescription(e.target.value)}
 										value={description}
+										disabled={state === "submitting"}
+									/>
+								</FormControl>
+							</GridItem>
+							<GridItem colSpan={2}>
+								<FormControl>
+									<FormLabel>Password</FormLabel>
+									<Input
+										name="password"
+										placeholder="Sssttt... 🤫"
+										type="password"
+										onChange={(e) => setPassword(e.target.value)}
+										value={password}
 										disabled={state === "submitting"}
 									/>
 								</FormControl>

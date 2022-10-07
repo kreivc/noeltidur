@@ -50,6 +50,8 @@ const upload = async (req: NextApiRequest, res: NextApiResponse) => {
 	const form = new formidable.IncomingForm();
 	let data: FieldDatas = {};
 	form.parse(req, async (err: any, fields: Fields, files: any) => {
+		if (fields?.password !== process.env.PASSWORD)
+			return res.status(400).json({ message: "Wrong Password" });
 		await cloudinary.uploader.upload(
 			files.image?.filepath,
 			async (err_c: any, result: any) => {
@@ -66,10 +68,12 @@ const upload = async (req: NextApiRequest, res: NextApiResponse) => {
 					...data,
 				});
 				await newPost.save();
+				return res
+					.status(200)
+					.json({ message: "Successfully upload tidur pose" });
 			}
 		);
 	});
-	res.status(200).json({ message: "Success" });
 };
 
 const getAllPost = async (req: NextApiRequest, res: NextApiResponse) => {
