@@ -1,9 +1,8 @@
-import type { NextPage } from "next";
+import type { GetStaticProps } from "next";
 import Head from "next/head";
-import { Box, Image } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { Box } from "@chakra-ui/react";
 import axios from "axios";
-import { buildUrl } from "cloudinary-build-url";
+import CloudinaryImg from "../components/CloudinaryImg";
 
 interface Post {
 	_id: string;
@@ -11,7 +10,6 @@ interface Post {
 	date: string;
 	description: string;
 	image: string;
-	imageBlur: string;
 	publicId: string;
 	height: number;
 	width: number;
@@ -24,7 +22,6 @@ export namespace Post {
 			date: json.date,
 			description: json.description,
 			image: json.image,
-			imageBlur: urlBlurred(json.publicId),
 			publicId: json.publicId,
 			height: json.height,
 			width: json.width,
@@ -32,30 +29,7 @@ export namespace Post {
 	}
 }
 
-const urlBlurred = (publicId: string) =>
-	buildUrl(publicId, {
-		cloud: {
-			cloudName: process.env.NEXT_PUBLIC_CLOUD_NAME,
-		},
-		transformations: {
-			effect: {
-				name: "blur:1000",
-			},
-			quality: 1,
-		},
-	});
-
-const Home: NextPage = () => {
-	const [data, setData] = useState<Post[]>([]);
-
-	useEffect(() => {
-		const getData = async () => {
-			const datas = await axios.get("/api/post");
-			setData((datas.data.posts as []).map((val) => Post.fromJSON(val)));
-		};
-		getData();
-	}, []);
-
+const Home = ({ posts }: { posts: Post[] }) => {
 	return (
 		<div>
 			<Head>
@@ -64,16 +38,18 @@ const Home: NextPage = () => {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
-			<Box w="full" mx="auto" sx={{ columnCount: [1, 2, 3], columnGap: "8px" }}>
-				{data.map((post) => (
-					<Box key={post._id} w="full" borderRadius="xl" mb={2}>
-						<Image
-							loading="lazy"
-							fallbackStrategy="beforeLoadOrError"
-							fallbackSrc={post.imageBlur}
-							src={post.image}
-							borderRadius="xl"
-							alt="Tidurrr"
+			<Box
+				w="full"
+				mb={2}
+				mx="auto"
+				sx={{ columnCount: [1, 2, 3], columnGap: "8px" }}
+			>
+				{posts.map((post) => (
+					<Box key={post._id} rounded="xl">
+						<CloudinaryImg
+							publicId={post.publicId}
+							width={post.width}
+							height={post.height}
 						/>
 					</Box>
 				))}
@@ -83,3 +59,15 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export const getStaticProps: GetStaticProps = async () => {
+	const {
+		data: { posts },
+	} = await axios.get(`${process.env.BASE_URL}/api/post`);
+	return {
+		props: {
+			posts,
+		},
+		revalidate: 10,
+	};
+};

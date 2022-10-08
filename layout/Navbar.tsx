@@ -31,9 +31,9 @@ const Header = () => {
 				</Link>
 			</NextLink>
 			<HStack alignItems="center" spacing={{ base: 0, md: 2 }}>
-				<NextLink href="/admin" passHref>
+				<NextLink href="/upload" passHref>
 					<Button as={Link} size="sm" variant="ghost">
-						Admin
+						Upload
 					</Button>
 				</NextLink>
 				<IconButton

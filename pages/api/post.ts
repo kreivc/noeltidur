@@ -78,6 +78,6 @@ const upload = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const getAllPost = async (req: NextApiRequest, res: NextApiResponse) => {
 	let posts;
-	posts = await Post.find();
+	posts = await Post.find().sort({ createdAt: "desc" });
 	res.status(200).json({ posts });
 };

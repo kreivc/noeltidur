@@ -3,8 +3,14 @@ import {
 	theme as base,
 	HeadingProps,
 	TextProps,
+	ThemeConfig,
 } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
+
+const config: ThemeConfig = {
+	initialColorMode: "dark",
+	useSystemColorMode: false,
+};
 
 const theme = extendTheme({
 	sizes: {
@@ -28,6 +34,9 @@ const theme = extendTheme({
 	fonts: {
 		heading: `Poppins, ${base.fonts.heading}`,
 		body: `Inter, ${base.fonts.body}`,
+	},
+	config: {
+		...config,
 	},
 });
 
