@@ -35,7 +35,13 @@ const CloudinaryImg = ({ publicId, height, width }: CloudinaryImgProps) => {
 	});
 
 	return (
-		<Box pos="relative" cursor="pointer" className="group" rounded="xl">
+		<Box
+			pos="relative"
+			cursor="pointer"
+			className="group"
+			rounded="xl"
+			overflow="hidden"
+		>
 			<ChakraNextUnwrappedImage
 				rounded="xl"
 				w="auto"
